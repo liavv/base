@@ -1,16 +1,29 @@
-const express = require("express");
-const app = express();
-const port = 3000;
+const express = require('express');
+const bodyParser = require('body-parser');
+const dev = process.NODE_ENV !== 'production';
+const app = require('next')({dev, dir: './client'})
+const views = require('./client/views/views');
+const routes = require("./api/v1/routes");
+const {sso} = require("node-expose-sspi");
+const port = process.env.PORT || 3000;
+app.prepare().then(()=>{
+    const server = express();
+    server.use(bodyParser.urlencoded({extended:false}));
+    server.use(bodyParser.json());
+  //  server.use(sso.auth());
 
-app.use(express.json());
-app.listen(port, ()=>{
-    console.log(`app listening on ${port}`);
-});
+    server.use('/', views(app));
+    server.use('/api/v1/',routes(server,null))
 
-app.get("/", (req,res)=>{
-    res.send(`welcome to my server on port ${port}`);
-});
+    server.use(function(err,req,res,next){
+        return next();
+    });
 
-app.get("/:name", (req,res)=>{
-    res.send(`hello ${req.params.name}`);
+    server.listen(port,err=>{
+        if (err) throw err;
+        console.log('listen on port 3000');
+    })
+}).catch(e=> {
+    console.log('failed start server', e.message);
+    process.exit(-1);
 });
