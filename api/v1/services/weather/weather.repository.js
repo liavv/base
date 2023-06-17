@@ -8,7 +8,7 @@ async function getLonLatByCity (req) {
        return {lon: (result.data !=null & result.data.length > 0 ? result.data[0].lon : null), lat: (result.data !=null & result.data.length > 0 ? result.data[0].lat : null)}
     }
     catch (e){
-        console.error(`error on getList is ${e.message}`);
+        console.error(`error on getLonLatByCity is ${e.message}`);
         throw e;
     }
 
@@ -23,7 +23,7 @@ async function getWeatherByLonLat (lonlat, req) {
        return {now:result.data.main.temp.toFixed(0),min:result.data.main.temp_min.toFixed(0),max:result.data.main.temp_max.toFixed(0)};
     }
     catch (e){
-        console.error(`error on getList is ${e.message}`);
+        console.error(`error on getWeatherByLonLat is ${e.message}`);
         throw e;
     }
 
