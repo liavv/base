@@ -11,8 +11,9 @@ app.prepare().then(()=>{
     server.use(bodyParser.json());
   //  server.use(sso.auth());
 
+    server.use('/api/v1/',routes(server,null));
     server.use('/', views(app));
-    server.use('/api/v1/',routes(server,null))
+   
 
     server.use(function(err,req,res,next){
         return next();
