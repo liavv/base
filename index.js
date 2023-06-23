@@ -4,6 +4,7 @@ const dev = process.NODE_ENV !== 'production';
 const app = require('next')({dev, dir: './client'})
 const views = require('./client/views/views');
 const routes = require("./api/v1/routes");
+const MongoClient = require("mongodb").MongoClient;
 const port = process.env.PORT || 3000;
 let db;
 const mongoDBUsername = encodeURIComponent("liavv");
