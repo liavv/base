@@ -1,10 +1,16 @@
+const MongoClient = require("mongodb").MongoClient;
 const uuid = require('uuid');
-
+const mongoDBUsername = encodeURIComponent("liavv");
+const mongoDBPassword = encodeURIComponent("lnlgyv0704");
+let client;
 async function getList (req) {
     let mongoData=[];
     try{
         
-
+          const uri = `mongodb+srv://${mongoDBUsername}:${mongoDBPassword}@cluster0.k5dx2.mongodb.net?retryWrites=true&w=majority`;
+        //const uri = "mongodb+srv://liavv:lnlgyv0704@cluster0.k5dx2.mongodb.net/test?retryWrites=true&w=majority";
+        client = await MongoClient.connect(uri, { useUnifiedTopology: true });
+        const db = await client.db('VanaDB');
         const collection = await db.collection('shoppingList');
         const result = await collection.find({}).sort('productId','desc').toArray();
         let resultFixed = [];
@@ -18,12 +24,20 @@ async function getList (req) {
         console.error(`error on getList is ${e.message}`);
         throw e;
     }
+    finally{
+        if (client != null) client.close();
+    }
 
 }
 
 async function addItem (req) {
     let mongoData=[];
     try{
+
+        //const uri = "mongodb+srv://liavv:lnlgyv0704@cluster0.k5dx2.mongodb.net/test?retryWrites=true&w=majority";
+        const uri = `mongodb+srv://${mongoDBUsername}:${mongoDBPassword}@cluster0.k5dx2.mongodb.net/test?retryWrites=true&w=majority`;
+        client = await MongoClient.connect(uri, { useUnifiedTopology: true });
+        const db = await client.db('VanaDB');
         const collection = await db.collection('shoppingList');
         const result = await collection.find({}).sort('productId','desc').toArray();
         const newProductId = Number(result[0].productId) + 1;
@@ -40,6 +54,9 @@ async function addItem (req) {
     catch (e){
         console.error(`error on getWeatherDataFromApi message is ${e.message}`);
         throw e;
+    }
+    finally{
+        if (client != null) client.close();
     }
 
 }
